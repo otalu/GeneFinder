@@ -150,6 +150,7 @@ def find_all_ORFs_both_strands(dna):
     both = forwards + backwards
     return both
 
+
 def longest_ORF(dna):
     """ Finds the longest ORF on both strands of the specified DNA and returns it
         as a string
@@ -157,7 +158,19 @@ def longest_ORF(dna):
     'ATGCTACATTCGCAT'
     """
     # TODO: implement this
-    pass
+    # pass
+
+    all_ORF = list(find_all_ORFs_both_strands(dna))
+    longest = 0
+    item = 0
+    while item < len(all_ORF):
+        if all_ORF[item] > all_ORF[item + 1]:
+            longest = all_ORF[item]
+            item += 1
+        else:
+            longest = all_ORF[item + 1]
+            item += 1
+        return longest
 
 
 def longest_ORF_noncoding(dna, num_trials):
@@ -168,8 +181,15 @@ def longest_ORF_noncoding(dna, num_trials):
         num_trials: the number of random shuffles
         returns: the maximum length longest ORF """
     # TODO: implement this
-    pass
+    # pass
 
+    list_dna = []
+    for i in num_trials:
+        new = shuffle_string(dna)
+        length = len(longest_ORF(new))
+        list_dna.append(length)
+    list_dna.sort()
+    return list_dna(-1)
 
 def coding_strand_to_AA(dna):
     """ Computes the Protein encoded by a sequence of DNA.  This function
@@ -201,4 +221,5 @@ def gene_finder(dna):
 
 if __name__ == "__main__":
     import doctest
-    doctest.run_docstring_examples(find_all_ORFs_both_strands, globals(), verbose=True)
+    # doctest.testmod()
+    doctest.run_docstring_examples(longest_ORF_noncoding, globals(), verbose=True)
