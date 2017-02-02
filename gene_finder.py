@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-YOUR HEADER COMMENT HERE
-
+Genez
 @author: Onur, the Incompetent
 
 """
 
 import random
+
+
 from amino_acids import aa, codons, aa_table   # you may find these useful
+
+
 from load import load_seq
+dna = load_seq("./data/X73525.fa")
 
 def shuffle_string(s):
     """Shuffles the characters in the input string
@@ -163,7 +167,7 @@ def longest_ORF(dna):
     all_ORF = list(find_all_ORFs_both_strands(dna))
     longest = 0
     item = 0
-    while item < len(all_ORF):
+    while item < (len(all_ORF)-1):
         if all_ORF[item] > all_ORF[item + 1]:
             longest = all_ORF[item]
             item += 1
@@ -183,13 +187,15 @@ def longest_ORF_noncoding(dna, num_trials):
     # TODO: implement this
     # pass
 
-    list_dna = []
-    for i in num_trials:
-        new = shuffle_string(dna)
-        length = len(longest_ORF(new))
-        list_dna.append(length)
-    list_dna.sort()
-    return list_dna(-1)
+    lonc = []  # lonc = longest ORF non coding
+    for i in range(num_trials):
+        dna_shuffled = shuffle_string(dna)
+        new_dna = list(dna_shuffled)
+        length = len(longest_ORF(new_dna))
+        lonc.append(length)
+    lonc.sort()
+    return lonc(-1)
+
 
 def coding_strand_to_AA(dna):
     """ Computes the Protein encoded by a sequence of DNA.  This function
@@ -206,7 +212,13 @@ def coding_strand_to_AA(dna):
         'MPA'
     """
     # TODO: implement this
-    pass
+    # pass
+    AA = ''  # empty string
+    # dna = list(dna)
+    for item in range(0, len(dna) - len(dna) % 3, 3):  # runs loop for every codon
+        amino_acid = aa_table[dna[item:item+3]]  # assigns aminoacid the protein
+        AA += amino_acid  # adds AA to the list
+    return AA
 
 
 def gene_finder(dna):
@@ -216,10 +228,10 @@ def gene_finder(dna):
         returns: a list of all amino acid sequences coded by the sequence dna.
     """
     # TODO: implement this
-    pass
-
+    # pass
+    threshold = longest_ORF_noncoding(dna, 1500)
 
 if __name__ == "__main__":
     import doctest
     # doctest.testmod()
-    doctest.run_docstring_examples(longest_ORF_noncoding, globals(), verbose=True)
+    doctest.run_docstring_examples(coding_strand_to_AA, globals(), verbose=True)
