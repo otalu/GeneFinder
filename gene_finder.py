@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Genez
+#genez
 @author: Onur, the Incompetent
 
 """
@@ -12,7 +12,8 @@ from amino_acids import aa, codons, aa_table   # you may find these useful
 
 
 from load import load_seq
-dna = load_seq("./data/X73525.fa")
+
+
 
 def shuffle_string(s):
     """Shuffles the characters in the input string
@@ -65,6 +66,7 @@ def get_reverse_complement(dna):
         reverse.append(nucleotide)
         index = index - 1
     return "".join(reverse)
+
 
 def rest_of_ORF(dna):
     """ Takes a DNA sequence that is assumed to begin with a start
@@ -194,7 +196,7 @@ def longest_ORF_noncoding(dna, num_trials):
         length = len(longest_ORF(new_dna))
         lonc.append(length)
     lonc.sort()
-    return lonc(-1)
+    return lonc[-1]
 
 
 def coding_strand_to_AA(dna):
@@ -215,8 +217,10 @@ def coding_strand_to_AA(dna):
     # pass
     AA = ''  # empty string
     # dna = list(dna)
-    for item in range(0, len(dna) - len(dna) % 3, 3):  # runs loop for every codon
-        amino_acid = aa_table[dna[item:item+3]]  # assigns aminoacid the protein
+    for item in range(0, len(dna) - len(dna) % 3, 3):
+        """ runs loop for every codon"""
+        amino_acid = aa_table[dna[item:item+3]]
+        """ assigns aminoacid the protein"""
         AA += amino_acid  # adds AA to the list
     return AA
 
@@ -230,8 +234,23 @@ def gene_finder(dna):
     # TODO: implement this
     # pass
     threshold = longest_ORF_noncoding(dna, 1500)
+    ORFs = find_all_ORFs_both_strands(dna)
+    rowan = []
+    for item in ORFs:
+        if len(item) > threshold:
+            rowan.append(coding_strand_to_AA(item))
+    return rowan
+
 
 if __name__ == "__main__":
+    dna = load_seq("./data/X73525.fa")
+    sam = gene_finder(dna)
+    for item in sam:
+        print (item)
+        print ("____________________________________")
+
+
+"""
     import doctest
-    # doctest.testmod()
-    doctest.run_docstring_examples(coding_strand_to_AA, globals(), verbose=True)
+    doctest.testmod()
+"""
